@@ -1,6 +1,11 @@
 import streamlit as st
 import py3Dmol
 
+##############
+st.sidebar.image("img/inORCA.png",
+                 caption="Jesus Alvarado-Huayhuaz")
+##############
+
 def convert_xyz_to_inp(xyz_content, level, basis, operation, charge, multiplicity, print_orbitals):
     lines = xyz_content.strip().splitlines()
     atom_lines = lines[2:]  # Ignora encabezado y número de átomos
@@ -32,8 +37,8 @@ st.set_page_config(page_title="XYZ a INP + Visualización 3D")
 
 st.title("Conversor de XYZ a INP para ORCA con Visualización 3D")
 
-url = "https://github.com/inefable12/ORCA_generator_input/blob/main/img/inORCA.png?raw=true"
-st.image(url)
+#url = "https://github.com/inefable12/ORCA_generator_input/blob/main/img/inORCA.png?raw=true"
+#st.image(url)
 
 st.markdown("Sube un archivo `.xyz`, visualízalo en 3D, personaliza parámetros y descarga el archivo `.inp`.")
 

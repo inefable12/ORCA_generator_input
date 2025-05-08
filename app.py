@@ -1,11 +1,6 @@
 import streamlit as st
 import py3Dmol
 
-##############
-st.sidebar.image("img/inORCA.png",
-                 caption="Jesus Alvarado-Huayhuaz")
-##############
-
 def convert_xyz_to_inp(xyz_content, level, basis, operation, charge, multiplicity, print_orbitals):
     lines = xyz_content.strip().splitlines()
     atom_lines = lines[2:]  # Ignora encabezado y número de átomos
@@ -34,6 +29,11 @@ def show_xyz(xyz_data):
 
 # Configuración de página
 st.set_page_config(page_title="XYZ a INP + Visualización 3D")
+
+##############
+st.sidebar.image("img/inORCA.png",
+                 caption="Jesus Alvarado-Huayhuaz")
+##############
 
 st.title("Conversor de XYZ a INP para ORCA con Visualización 3D")
 

@@ -35,7 +35,7 @@ st.sidebar.image("img/inORCA.png",
                  caption="Jesus Alvarado-Huayhuaz")
 ##############
 
-st.title("Conversor de XYZ a INP para ORCA con Visualización 3D")
+st.title("Conversor de XYZ a INP para Cálculo Cuántico con ORCA")
 
 #url = "https://github.com/inefable12/ORCA_generator_input/blob/main/img/inORCA.png?raw=true"
 #st.image(url)

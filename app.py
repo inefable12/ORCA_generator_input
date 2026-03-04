@@ -60,7 +60,7 @@ def smiles_to_xyz(smiles):
 # CONFIGURACIÓN DE PÁGINA
 # =========================
 
-st.set_page_config(page_title="ORCA Input Generator")
+st.set_page_config(page_title="ORCA Input Generator",page_icon="🐋",layout="wide")
 
 st.sidebar.image("img/inORCA.png", caption="Dr. Jesus Alvarado-Huayhuaz")
 
@@ -79,7 +79,7 @@ menu = st.sidebar.radio(
      "NO")
 )
 
-st.title("Generador de INP para ORCA", divider='rainbow')
+st.header("Generador de INP para ORCA", divider='rainbow')
 
 # =========================
 # CAMPOS COMUNES

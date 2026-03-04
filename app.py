@@ -64,12 +64,12 @@ st.set_page_config(page_title="inORCA - ORCA Input Generator")
 
 st.sidebar.image("img/inORCA.png", caption="Jesus Alvarado-Huayhuaz")
 
-st.sidebar.title("Menú")
+st.sidebar.title("¿Tienes las coordenadas?")
 
 menu = st.sidebar.radio(
-    "Selecciona una opción:",
-    ("Opción 1: Subir archivo XYZ",
-     "Opción 2: Generar desde SMILES")
+    "Si no las tienes puedes seleccionar NO e ingresar el código SMILES:",
+    ("SI",
+     "NO")
 )
 
 st.title("Conversor de XYZ/SMILES a INP para ORCA")

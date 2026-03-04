@@ -60,7 +60,7 @@ def smiles_to_xyz(smiles):
 # CONFIGURACIÓN DE PÁGINA
 # =========================
 
-st.set_page_config(page_title="ORCA Input Generator",page_icon="🐋",layout="wide")
+st.set_page_config(page_title="ORCA Input Generator",page_icon="🐋") #,layout="wide")
 
 st.sidebar.image("img/inORCA.png", caption="Dr. Jesus Alvarado-Huayhuaz")
 

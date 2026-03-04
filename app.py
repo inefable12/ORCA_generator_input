@@ -109,17 +109,15 @@ if menu == "SI":
     #st.success("Carga tu molécula")
     uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
+    st.info("Ejemplo: Molécula de AGUA")
+    xyz_text = st.text_area("Este archivo XYZ se muestra por defecto, puedes ingresar tu molécula arriba", xyz_text, height=150)
+    
     # Si el usuario sube archivo, usar ese
     if uploaded_file is not None:
         xyz_text = uploaded_file.read().decode("utf-8")
     else:
         # Si no, usar molécula por defecto
         xyz_text = default_xyz
-
-    st.info("Ejemplo: Molécula de AGUA")
-    #xyz_text = st.text_area
-    st.write("Este archivo XYZ se muestra por defecto, puedes ingresar tu molécula arriba", xyz_text, height=150)
-    
     
     # Visualización 3D
     st.subheader("Visualización 3D")

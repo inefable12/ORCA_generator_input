@@ -66,6 +66,13 @@ st.sidebar.image("img/inORCA.png", caption="Jesus Alvarado-Huayhuaz")
 
 st.sidebar.title("¿Tienes las coordenadas?")
 
+default_xyz = """3
+Hello water (https://www.faccts.de/docs/orca/6.0/tutorials/first_steps/first_calc.html)
+O   0.0000   0.0000   0.0626
+H  -0.7920   0.0000  -0.4973
+H   0.7920   0.0000  -0.4973
+"""
+
 menu = st.sidebar.radio(
     "Si no las tienes puedes seleccionar NO e ingresar el código SMILES:",
     ("SI",
@@ -102,37 +109,39 @@ if menu == "SI":
 
     uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
+    # Si el usuario sube archivo, usar ese
     if uploaded_file is not None:
-
         xyz_text = uploaded_file.read().decode("utf-8")
+    else:
+        # Si no, usar molécula por defecto
+        xyz_text = default_xyz
 
-        st.subheader("Contenido del archivo XYZ")
-        st.text_area("Texto del XYZ", xyz_text, height=150)
+    st.subheader("Contenido del archivo XYZ")
+    xyz_text = st.text_area("Texto del XYZ", xyz_text, height=150)
 
-        # Visualización 3D
-        st.subheader("Visualización 3D")
-        viewer = show_xyz(xyz_text)
-        st.components.v1.html(viewer._make_html(), height=400, width=500)
+    # Visualización 3D
+    st.subheader("Visualización 3D")
+    viewer = show_xyz(xyz_text)
+    st.components.v1.html(viewer._make_html(), height=400, width=500)
 
-        # Parámetros
-        st.subheader("Parámetros de cálculo")
-        level, basis, operation, charge, multiplicity, print_orbitals = parameter_section()
+    # Parámetros
+    st.subheader("Parámetros de cálculo")
+    level, basis, operation, charge, multiplicity, print_orbitals = parameter_section()
 
-        # Generación INP
-        inp_text = convert_xyz_to_inp(
-            xyz_text, level, basis, operation, charge, multiplicity, print_orbitals
-        )
+    # Generación INP
+    inp_text = convert_xyz_to_inp(
+        xyz_text, level, basis, operation, charge, multiplicity, print_orbitals
+    )
 
-        st.subheader("Archivo INP generado")
-        st.text_area("Vista previa del INP", inp_text, height=300)
+    st.subheader("Archivo INP generado")
+    st.text_area("Vista previa del INP", inp_text, height=300)
 
-        st.download_button(
-            label="Descargar archivo INP",
-            data=inp_text,
-            file_name=uploaded_file.name.replace(".xyz", ".inp"),
-            mime="text/plain"
-        )
-
+    st.download_button(
+        label="Descargar archivo INP",
+        data=inp_text,
+        file_name="default_structure.inp",
+        mime="text/plain"
+    )
 
 # =====================================================
 # OPCIÓN 2 — GENERAR DESDE SMILES

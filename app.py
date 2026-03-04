@@ -60,9 +60,9 @@ def smiles_to_xyz(smiles):
 # CONFIGURACIÓN DE PÁGINA
 # =========================
 
-st.set_page_config(page_title="inORCA - ORCA Input Generator")
+st.set_page_config(page_title="ORCA Input Generator")
 
-st.sidebar.image("img/inORCA.png", caption="Jesus Alvarado-Huayhuaz")
+st.sidebar.image("img/inORCA.png", caption="Dr. Jesus Alvarado-Huayhuaz")
 
 st.sidebar.title("¿Tienes las coordenadas?")
 
@@ -79,7 +79,7 @@ menu = st.sidebar.radio(
      "NO")
 )
 
-st.title("Conversor de XYZ/SMILES a INP para ORCA")
+st.title("Generador de INP para ORCA", divider='rainbow'))
 
 # =========================
 # CAMPOS COMUNES

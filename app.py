@@ -114,10 +114,13 @@ if menu == "SI":
         xyz_text = uploaded_file.read().decode("utf-8")
     else:
         # Si no, usar molécula por defecto
-        st.info("Ejemplo: Molécula de AGUA")
-        #xyz_text = st.text_area("Este archivo XYZ se muestra por defecto, puedes ingresar tu molécula arriba", xyz_text, height=150)
         xyz_text = default_xyz
 
+    st.info("Ejemplo: Molécula de AGUA")
+    #xyz_text = st.text_area
+    st.write("Este archivo XYZ se muestra por defecto, puedes ingresar tu molécula arriba", xyz_text, height=150)
+    
+    
     # Visualización 3D
     st.subheader("Visualización 3D")
     viewer = show_xyz(xyz_text)

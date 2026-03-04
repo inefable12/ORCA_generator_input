@@ -116,9 +116,9 @@ if menu == "SI":
         # Si no, usar molécula por defecto
         xyz_text = default_xyz
 
-    st.subheader("Contenido del archivo XYZ")
-    xyz_text = st.text_area("Texto del XYZ", xyz_text, height=150)
-
+    st.info("Ingresa tu archivo XYZ")
+    xyz_text = st.text_area("Se muestra por defecto para el agua, puedes ingresar tu molécula arriba", xyz_text, height=150)
+ 
     # Visualización 3D
     st.subheader("Visualización 3D")
     viewer = show_xyz(xyz_text)

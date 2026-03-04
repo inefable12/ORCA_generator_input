@@ -1,12 +1,19 @@
 import streamlit as st
 import py3Dmol
+from rdkit import Chem
+from rdkit.Chem import AllChem
+import tempfile
+
+# =========================
+# FUNCIONES GENERALES
+# =========================
 
 def convert_xyz_to_inp(xyz_content, level, basis, operation, charge, multiplicity, print_orbitals):
     lines = xyz_content.strip().splitlines()
-    atom_lines = lines[2:]  # Ignora encabezado y número de átomos
+    atom_lines = lines[2:]
 
     header = f"! {level} {operation} {basis}\n"
-    
+
     output_block = ""
     if print_orbitals == "Yes":
         output_block = """%output
@@ -20,6 +27,7 @@ end
 
     return header + output_block + coord_block
 
+
 def show_xyz(xyz_data):
     viewer = py3Dmol.view(width=500, height=400)
     viewer.addModel(xyz_data, 'xyz')
@@ -27,55 +35,144 @@ def show_xyz(xyz_data):
     viewer.zoomTo()
     return viewer
 
-# Configuración de página
-st.set_page_config(page_title="XYZ a INP + Visualización 3D")
 
-##############
-st.sidebar.image("img/inORCA.png",
-                 caption="Jesus Alvarado-Huayhuaz")
-##############
+def smiles_to_xyz(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    mol = Chem.AddHs(mol)
+    AllChem.EmbedMolecule(mol)
+    AllChem.MMFFOptimizeMolecule(mol)
 
-st.title("Conversor de XYZ a INP para Cálculo Cuántico con ORCA")
+    conf = mol.GetConformer()
+    atoms = mol.GetAtoms()
 
-#url = "https://github.com/inefable12/ORCA_generator_input/blob/main/img/inORCA.png?raw=true"
-#st.image(url)
+    xyz_lines = [str(mol.GetNumAtoms()), "Generated from SMILES"]
 
-st.markdown("Sube un archivo `.xyz`, visualízalo en 3D, personaliza parámetros y descarga el archivo `.inp`.")
+    for atom in atoms:
+        pos = conf.GetAtomPosition(atom.GetIdx())
+        xyz_lines.append(
+            f"{atom.GetSymbol():<2} {pos.x:>12.5f} {pos.y:>12.5f} {pos.z:>12.5f}"
+        )
 
-# Campos editables
-col1, col2 = st.columns(2)
-with col1:
-    level = st.text_input("Nivel de cálculo", "B3LYP")
-    operation = st.text_input("Operación", "OPT FREQ")
-    print_orbitals = st.selectbox("¿Imprimir orbitales?", ["Yes", "No"])
-with col2:
-    basis = st.text_input("Conjunto Base", "def2-TZVP")
-    charge = st.number_input("Carga", value=0, step=1)
-    multiplicity = st.number_input("Multiplicidad", value=1, step=1)
+    return "\n".join(xyz_lines), mol
 
-# Subida del archivo
-uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
-if uploaded_file is not None:
-    xyz_text = uploaded_file.read().decode("utf-8")
-    
-    st.subheader("📄 Contenido del archivo XYZ")
-    st.text_area("Texto del archivo XYZ", xyz_text, height=150)
+# =========================
+# CONFIGURACIÓN DE PÁGINA
+# =========================
 
-    st.subheader("📦 Archivo INP generado")
-    inp_text = convert_xyz_to_inp(
-        xyz_text, level, basis, operation, charge, multiplicity, print_orbitals
-    )
-    st.text_area("Vista previa del archivo INP", inp_text, height=250)
+st.set_page_config(page_title="inORCA - ORCA Input Generator")
 
-    st.download_button(
-        label="Descargar archivo INP",
-        data=inp_text,
-        file_name=uploaded_file.name.replace(".xyz", ".inp"),
-        mime="text/plain"
-    )
+st.sidebar.image("img/inORCA.png", caption="Jesus Alvarado-Huayhuaz")
 
-    st.subheader("🧪 Visualización 3D de la molécula")
-    viewer = show_xyz(xyz_text)
-    viewer_html = viewer._make_html()
-    st.components.v1.html(viewer_html, height=400, width=500)
+st.sidebar.title("Menú")
+
+menu = st.sidebar.radio(
+    "Selecciona una opción:",
+    ("Opción 1: Subir archivo XYZ",
+     "Opción 2: Generar desde SMILES")
+)
+
+st.title("Conversor de XYZ/SMILES a INP para ORCA")
+
+# =========================
+# CAMPOS COMUNES
+# =========================
+
+def parameter_section():
+    col1, col2 = st.columns(2)
+
+    with col1:
+        level = st.text_input("Nivel de cálculo", "B3LYP")
+        operation = st.text_input("Operación", "OPT FREQ")
+        print_orbitals = st.selectbox("¿Imprimir orbitales?", ["Yes", "No"])
+
+    with col2:
+        basis = st.text_input("Conjunto Base", "def2-TZVP")
+        charge = st.number_input("Carga", value=0, step=1)
+        multiplicity = st.number_input("Multiplicidad", value=1, step=1)
+
+    return level, basis, operation, charge, multiplicity, print_orbitals
+
+
+# =====================================================
+# OPCIÓN 1 — SUBIR XYZ  (PÁGINA ORIGINAL MEJORADA)
+# =====================================================
+
+if menu == "Opción 1: Subir archivo XYZ":
+
+    uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
+
+    if uploaded_file is not None:
+
+        xyz_text = uploaded_file.read().decode("utf-8")
+
+        st.subheader("Contenido del archivo XYZ")
+        st.text_area("Texto del XYZ", xyz_text, height=150)
+
+        # Visualización 3D
+        st.subheader("Visualización 3D")
+        viewer = show_xyz(xyz_text)
+        st.components.v1.html(viewer._make_html(), height=400, width=500)
+
+        # Parámetros
+        st.subheader("Parámetros de cálculo")
+        level, basis, operation, charge, multiplicity, print_orbitals = parameter_section()
+
+        # Generación INP
+        inp_text = convert_xyz_to_inp(
+            xyz_text, level, basis, operation, charge, multiplicity, print_orbitals
+        )
+
+        st.subheader("Archivo INP generado")
+        st.text_area("Vista previa del INP", inp_text, height=300)
+
+        st.download_button(
+            label="Descargar archivo INP",
+            data=inp_text,
+            file_name=uploaded_file.name.replace(".xyz", ".inp"),
+            mime="text/plain"
+        )
+
+
+# =====================================================
+# OPCIÓN 2 — GENERAR DESDE SMILES
+# =====================================================
+
+elif menu == "Opción 2: Generar desde SMILES":
+
+    smiles_input = st.text_input("Ingresa código SMILES", "CCO")
+
+    if smiles_input:
+
+        try:
+            xyz_text, mol = smiles_to_xyz(smiles_input)
+
+            st.subheader("Coordenadas 3D generadas (formato XYZ)")
+            st.text_area("Texto XYZ generado", xyz_text, height=200)
+
+            # Visualización 3D
+            st.subheader("Visualización 3D")
+            viewer = show_xyz(xyz_text)
+            st.components.v1.html(viewer._make_html(), height=400, width=500)
+
+            # Parámetros
+            st.subheader("Parámetros de cálculo")
+            level, basis, operation, charge, multiplicity, print_orbitals = parameter_section()
+
+            # Generar INP
+            inp_text = convert_xyz_to_inp(
+                xyz_text, level, basis, operation, charge, multiplicity, print_orbitals
+            )
+
+            st.subheader("Archivo INP generado")
+            st.text_area("Vista previa del INP", inp_text, height=300)
+
+            st.download_button(
+                label="Descargar archivo INP",
+                data=inp_text,
+                file_name="smiles_generated.inp",
+                mime="text/plain"
+            )
+
+        except:
+            st.error("SMILES inválido. Por favor verifica la sintaxis.")

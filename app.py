@@ -98,7 +98,7 @@ def parameter_section():
 # OPCIÓN 1 — SUBIR XYZ  (PÁGINA ORIGINAL MEJORADA)
 # =====================================================
 
-if menu == "Opción 1: Subir archivo XYZ":
+if menu == "SI":
 
     uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
@@ -138,7 +138,7 @@ if menu == "Opción 1: Subir archivo XYZ":
 # OPCIÓN 2 — GENERAR DESDE SMILES
 # =====================================================
 
-elif menu == "Opción 2: Generar desde SMILES":
+elif menu == "NO":
 
     smiles_input = st.text_input("Ingresa código SMILES", "CCO")
 

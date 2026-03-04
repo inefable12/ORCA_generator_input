@@ -106,7 +106,7 @@ def parameter_section():
 # =====================================================
 
 if menu == "SI":
-    st.success("Carga tu molécula")
+    #st.success("Carga tu molécula")
     uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
     # Si el usuario sube archivo, usar ese

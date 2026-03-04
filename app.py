@@ -79,7 +79,7 @@ menu = st.sidebar.radio(
      "NO")
 )
 
-st.title("Generador de INP para ORCA", divider='rainbow'))
+st.title("Generador de INP para ORCA", divider='rainbow')
 
 # =========================
 # CAMPOS COMUNES

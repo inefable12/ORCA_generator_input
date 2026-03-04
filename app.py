@@ -106,7 +106,7 @@ def parameter_section():
 # =====================================================
 
 if menu == "SI":
-
+    st.success("Carga tu molécula")
     uploaded_file = st.file_uploader("Selecciona un archivo XYZ", type=["xyz"])
 
     # Si el usuario sube archivo, usar ese
@@ -116,8 +116,8 @@ if menu == "SI":
         # Si no, usar molécula por defecto
         xyz_text = default_xyz
 
-    st.info("Ingresa tu archivo XYZ")
-    xyz_text = st.text_area("Se muestra por defecto para el agua, puedes ingresar tu molécula arriba", xyz_text, height=150)
+    st.info("Ejemplo: Molécula de AGUA")
+    xyz_text = st.text_area("Este archivo XYZ se muestra por defecto, puedes ingresar tu molécula arriba", xyz_text, height=150)
  
     # Visualización 3D
     st.subheader("Visualización 3D")
